@@ -1,10 +1,6 @@
 <template>
   <header>
-    <h1>Welcome to Secret Chat</h1>
-    <span>
-      Create a room and invite your friend. All messages will be erased after
-      both of you will leave a room.
-    </span>
+    <h1>Secret Chat</h1>
   </header>
   <router-view />
 </template>
