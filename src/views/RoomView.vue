@@ -1,19 +1,152 @@
 <template>
-  <div class="room">Your room id is {{ roomId }}</div>
+  <div class="chat">
+    <div class="chat--messages">
+      <div
+        :class="{
+          'chat--message_container': true,
+          'chat--message_container-right': message.fromMe,
+        }"
+        v-for="message in messages"
+        :key="message.id"
+      >
+        <div
+          :class="{
+            'chat--message': true,
+            'chat--message-right': message.fromMe,
+          }"
+          v-html="message.text"
+        />
+      </div>
+    </div>
+    <div class="chat--bottom">
+      <a-textarea
+        v-model:value="newMessage"
+        placeholder="Enter your message"
+        :rows="4"
+      />
+      <div class="chat--buttons">
+        <a-button class="chat--send" type="primary" @click="send"
+          >Send</a-button
+        >
+        <router-link to="/">
+          <a-button class="chat--send" @click="send">Leave room</a-button>
+        </router-link>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { nanoid } from 'nanoid';
+import { Message } from '@/types/Message';
 
 export default defineComponent({
   setup() {
     const route = useRoute();
     const roomId = route.params.id;
+    const newMessage = ref('');
+    const messages = ref<Message[]>([
+      {
+        id: 0,
+        text: 'Hello!',
+        fromMe: true,
+        timeSent: Date.now(),
+      },
+      {
+        id: 1,
+        text: 'Hello!',
+        fromMe: false,
+        timeSent: Date.now(),
+      },
+      {
+        id: 2,
+        text: 'How are you?',
+        fromMe: true,
+        timeSent: Date.now(),
+      },
+    ]);
+
+    const send = () => {
+      if (newMessage.value.length === 0) return;
+
+      const message: Message = {
+        id: nanoid(),
+        text: newMessage.value.trim(),
+        timeSent: Date.now(),
+      };
+      messages.value.push(message);
+      newMessage.value = '';
+    };
 
     return {
       roomId,
+      newMessage,
+      messages,
+      send,
     };
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.chat {
+  height: calc(100vh - 100px);
+  position: relative;
+
+  &--messages {
+    height: calc(100% - 140px);
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    overflow: auto;
+    padding-bottom: 32px;
+  }
+
+  &--message_container {
+    display: flex;
+    width: 100%;
+
+    &-right {
+      justify-content: flex-end;
+    }
+  }
+
+  &--message {
+    width: 95%;
+    padding: 8px 8px 8px 8px;
+    margin: 4px 0;
+    border-radius: 6px 6px 6px 0;
+    border: 1px solid #e3e3e3;
+    font-size: 16px;
+
+    &-right {
+      border-radius: 6px 6px 0px 6px;
+      background-color: rgba(123, 97, 255, 0.1);
+      border-color: transparent;
+    }
+  }
+
+  &--buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  &--bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &--send {
+    margin-top: 16px;
+    font-size: 16px;
+  }
+}
+</style>
