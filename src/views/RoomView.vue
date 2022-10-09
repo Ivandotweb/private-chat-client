@@ -6,7 +6,7 @@
           'chat--message_container': true,
           'chat--message_container-right': message.fromMe,
         }"
-        v-for="message in messages"
+        v-for="message in roomStore.messages"
         :key="message.id"
       >
         <div
@@ -25,37 +25,29 @@
         :rows="4"
       />
       <div class="chat--buttons">
-        <a-button class="chat--send" type="primary" @click="send"
-          >Send</a-button
-        >
+        <a-button class="chat--send" type="primary">Send</a-button>
         <router-link to="/">
-          <a-button class="chat--send" @click="send">Leave room</a-button>
+          <a-button class="chat--send">Leave room</a-button>
         </router-link>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { defineComponent } from 'vue';
-import { useMessages } from '@composables/useMessages';
+import { useRoom } from '@/store/room';
 
-export default defineComponent({
-  setup() {
-    const route = useRoute();
-    const roomId = route.params.id;
+const route = useRoute();
+const roomStore = useRoom();
+const newMessage = ref('');
 
-    const { send, messages, newMessage } = useMessages();
-
-    return {
-      roomId,
-      newMessage,
-      send,
-      messages,
-    };
-  },
+const roomId = computed(() => {
+  return Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 });
+
+roomStore.loadMessages(roomId.value);
 </script>
 
 <style lang="scss" scoped>
