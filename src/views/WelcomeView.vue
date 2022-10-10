@@ -7,24 +7,25 @@
         both of you leave a room.
       </span>
     </div>
-    <router-link :to="`/room/${roomId}`" class="welcome--enter-room">
-      <a-button type="primary"> Enter room </a-button>
-    </router-link>
+    <a-button type="primary" class="welcome--enter-room" @click="createRoom">
+      Enter room
+    </a-button>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { nanoid } from 'nanoid';
-import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+import { useRoom } from '@/store/room';
 
-export default defineComponent({
-  name: 'WelcomeView',
-  setup() {
-    return {
-      roomId: nanoid(),
-    };
-  },
-});
+const router = useRouter();
+const roomId = nanoid();
+const roomStore = useRoom();
+
+const createRoom = () => {
+  roomStore.createRoom(roomId);
+  router.push(`/room/${roomId}`);
+};
 </script>
 
 <style lang="scss" scoped>

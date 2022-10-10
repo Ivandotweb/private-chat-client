@@ -19,7 +19,7 @@ export const useRoom = defineStore('rooms', {
       const api = useApi();
 
       const messages: Message[] = await api.request({
-        path: 'room',
+        path: `room/${roomId}`,
       });
 
       this.messages = messages;

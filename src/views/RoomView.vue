@@ -27,7 +27,7 @@
       <div class="chat--buttons">
         <a-button class="chat--send" type="primary">Send</a-button>
         <router-link to="/">
-          <a-button class="chat--send">Leave room</a-button>
+          <a-button>Leave room</a-button>
         </router-link>
       </div>
     </div>
@@ -92,6 +92,7 @@ roomStore.loadMessages(roomId.value);
     display: flex;
     width: 100%;
     justify-content: space-between;
+    margin-top: 16px;
   }
 
   &--bottom {
@@ -105,7 +106,6 @@ roomStore.loadMessages(roomId.value);
   }
 
   &--send {
-    margin-top: 16px;
     font-size: 16px;
   }
 }

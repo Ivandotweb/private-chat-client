@@ -26,7 +26,6 @@ export const useApi = defineStore('api', {
         query = {},
         headers = {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
       } = config;
 
